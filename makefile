@@ -1,4 +1,2 @@
-hello
-
-
-assdsad
+all:
+	g++ -c Trees.cpp
