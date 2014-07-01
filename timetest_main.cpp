@@ -21,3 +21,9 @@ void foo(int n){
 
 int main(int argc, char* argv[]){
 	double start,end;
+	start = cpuTime();
+	foo(36);
+	end = cpuTime();
+	std::cout<<"Time: "<<end - start<<'\n';
+	return 0;
+}
