@@ -39,6 +39,8 @@ int	main()
 
 			int	Avg_point	=	0	;
 
+			int	All_play_number	=	0	;
+
 			result.Max_point	=	0	;
 
 			result.All_point	=	0	;
@@ -46,8 +48,6 @@ int	main()
 			result.Max_number	=	0	;
 
 			result.Stage_number	=	0	;
-
-			
 
 			/*
 
@@ -85,6 +85,8 @@ int	main()
 			fstream	 result_file	;
 
 			result_file.open( "./Game_end_result" )	;
+
+			result_file << "All playing game number is " << All_play_number << " ." << endl	;
 
 			result_file << "Max point is " << result.Max_point << " ." << endl	;
 
