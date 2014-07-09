@@ -21,6 +21,13 @@ int	All_point	;
 int	Max_number	;
 };
 
+inline	bool	Does_block_exist( const int , const int )	;
+
+int	get_Merge_point( Grid , const dir_e )	;
+
+
+int	get_Is_Merge_point( Grid )	;
+
 
 int	get_Max_number_in_Grid( Grid& )	;
 
@@ -217,4 +224,205 @@ int	get_Max_number( int* number_array , int Max )
 
 
 
+int	get_Merge_point( Grid now_stat , const dir_e dir )
+		{
 
+
+			int	row	;
+
+			int	col	;
+
+
+			int	Merge_point	=	0	;
+
+
+			switch( dir )
+				{
+
+					case LEFT :
+
+						for( col = 0 ; col < 3 ; col++ )
+							{
+
+							for( row = 0 ; row < 4 ; row++ )
+								{
+
+									if( now_stat.canMerge( now_stat( row , col ) , now_stat( row  , col + 1 ) ) )
+										{
+
+											Merge_point	=	Merge_point + 1	;
+										
+										}
+								
+								}	
+							
+
+							}
+		
+						return	Merge_point	;
+
+					case RIGHT :
+
+						for( col = 3 ; col > 0 ; col-- )
+							{
+
+								for( row = 0 ; row < 4 ; row++ )
+									{
+
+										if( now_stat.canMerge( now_stat( row , col ) , now_stat( row , col - 1 ) ) )
+											{
+
+												Merge_point	=	Merge_point + 1	;
+
+											}
+
+									}
+
+							}
+
+						return	Merge_point	;
+
+					case UP :
+
+						for( row = 0 ; row < 3 ; row++ )
+							{
+
+								for( col = 0 ; col < 4 ; col++ )
+									{
+
+										if( now_stat.canMerge( now_stat( row , col ) , now_stat( row + 1 , col ) ) )
+											{
+
+												Merge_point	=	Merge_point + 1 ;
+
+											}
+
+									}
+
+							}
+						
+						return	Merge_point	;
+
+					case DOWN :
+
+						for( row = 3 ; row > 0 ; row-- )
+							{
+
+								for( col = 0 ; col < 4 ; col++ )
+									{
+
+										if( now_stat.canMerge( now_stat( row , col ) , now_stat( row - 1 , col ) ) )
+											{
+
+												Merge_point	=	Merge_point + 1	;
+
+											}
+
+									}
+
+							}
+
+						return	Merge_point	;
+
+					default :
+			
+						return	0	;
+
+				}	
+
+		}
+
+
+
+
+int	get_Is_Merge_point( Grid now_stat )
+		{
+		
+			int	Is_Merge_point	=	0	;
+
+			int	row	;
+
+			int	col	;
+
+			
+
+
+			for( row = 0 ; row < 4 ; row++ )
+				{
+
+					for( col = 0 ; col < 4 ; col++ )
+						{
+
+							if( Does_block_exist( row + 1 , col ) )
+								{
+								
+									if( now_stat.canMerge( now_stat( row , col ) , now_stat( row + 1 , col ) ) )
+										{
+
+											Is_Merge_point	=	Is_Merge_point + 1	;
+
+										}
+
+								}
+
+
+							if( Does_block_exist( row - 1 , col ) )
+								{
+
+									if( now_stat.canMerge( now_stat( row , col ) , now_stat( row - 1 , col ) ) )
+										{
+
+											Is_Merge_point	=	Is_Merge_point + 1	;
+
+										}
+
+								}
+
+							
+							if( Does_block_exist( row , col + 1 ) )
+								{
+
+									if( now_stat.canMerge( now_stat( row , col ) , now_stat( row , col + 1 ) ) )
+										{
+
+											Is_Merge_point	=	Is_Merge_point + 1	;
+
+										}
+
+								}
+
+							
+							if( Does_block_exist( row , col - 1 ) )
+								{
+
+									if( now_stat.canMerge( now_stat( row , col ) , now_stat( row , col - 1 ) ) )
+										{
+
+											Is_Merge_point	=	Is_Merge_point + 1	;
+
+										}
+
+								}
+
+						}
+
+				}
+
+
+			return	Is_Merge_point	;
+
+		}
+
+inline	bool	Does_block_exist( const int n1 , const int n2 )
+		{
+		
+			if( ( ( n1 > -1 ) && ( n1 < 4 ) ) && ( ( n2 > -1 ) && ( n2 < 4 ) ) )
+				{
+
+					return	true	;	
+
+				}
+
+			return	false	;
+		
+		}
