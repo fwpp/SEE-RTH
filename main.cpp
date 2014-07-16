@@ -38,6 +38,8 @@ int	get_Max_number_in_Grid( Grid& )	;
 
 int	get_Max_number( int* , int )	;
 
+/* test whether the row would be moved with left or right */
+bool row_full(Grid info,int row);
 
 int	main()
 		{
@@ -440,6 +442,7 @@ inline	bool	Does_block_exist( const int n1 , const int n2 )
 		
 		}
 
+<<<<<<< HEAD
 dir_e	get_next_dir( Grid now_stat )
 		{
 
@@ -825,3 +828,23 @@ dir_e	get_next_dir( Grid now_stat )
 				return	LEFT	;
 
 		}
+=======
+bool row_full(Grid info,int row){
+    bool full=true;
+    for(int i=0;i<GRID_LENGTH;i++){
+        if( info(row,i) == 0){
+            full=false;
+            break;
+        }
+
+        if( i < (GRID_LENGTH-1) ){
+            if( info.canMerge(info(row,i),info(row,i+1)) ){
+                full=false;
+                break;
+            }
+        }
+    }
+
+    return full;
+}
+>>>>>>> b987f36a21dc45211656ed1e11d22ba41ff2c59b
