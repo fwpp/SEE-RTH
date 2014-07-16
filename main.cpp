@@ -38,6 +38,8 @@ int	get_Max_number_in_Grid( Grid& )	;
 
 int	get_Max_number( int* , int )	;
 
+/* test whether the row would be moved with left or right */
+bool row_full(Grid info,int row);
 
 int	main()
 		{
@@ -113,7 +115,7 @@ int	main()
 
 						//cout << "ok  " << i  <<  " "  <<  score  << "\n"  << endl	;
 
-						need_info.print( 30  )	;
+						need_info.print( 30 , 20 )	;
 
 						}
 
@@ -475,7 +477,7 @@ dir_e	get_next_dir( Grid now_stat )
 
 			test	=	now_stat	;
 
-			RIGHT_point	=	get_Merge_point( test , LEFT )	;
+			RIGHT_point	=	get_Merge_point( test , RIGHT )	;
 
 			test.shift( RIGHT )	;
 
@@ -531,6 +533,8 @@ dir_e	get_next_dir( Grid now_stat )
 									return	UP	;
 
 								}
+
+							//	DOWN_point < UP_point
 
 							return	UP	;
 
@@ -825,3 +829,21 @@ dir_e	get_next_dir( Grid now_stat )
 				return	LEFT	;
 
 		}
+bool row_full(Grid info,int row){
+    bool full=true;
+    for(int i=0;i<GRID_LENGTH;i++){
+        if( info(row,i) == 0){
+            full=false;
+            break;
+        }
+
+        if( i < (GRID_LENGTH-1) ){
+            if( info.canMerge(info(row,i),info(row,i+1)) ){
+                full=false;
+                break;
+            }
+        }
+    }
+
+    return full;
+}
