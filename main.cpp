@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#define Max_times 2
 
 
 using	namespace	std	;
@@ -20,6 +21,9 @@ int	Max_point	;
 int	All_point	;
 int	Max_number	;
 };
+
+
+dir_e	get_next_dir( Grid )	;
 
 inline	bool	Does_block_exist( const int , const int )	;
 
@@ -86,7 +90,7 @@ int	main()
 
 
 
-			for( ; i < 100 ; i++ )
+			for( ; i < Max_times ; i++ )
 				{
 
 
@@ -102,8 +106,17 @@ int	main()
 				
 						*/
 
+						
+						game.getCurrentGrid( need_info )	;
+
+						game.insertDirection( get_next_dir( need_info ) )	;
+
+						//cout << "ok  " << i  <<  " "  <<  score  << "\n"  << endl	;
+
+						need_info.print( 30  )	;
 
 						}
+
 				
 					result.All_point	=	result.All_point + score	;
 
@@ -425,4 +438,390 @@ inline	bool	Does_block_exist( const int n1 , const int n2 )
 
 			return	false	;
 		
+		}
+
+dir_e	get_next_dir( Grid now_stat )
+		{
+
+			int	LEFT_point	=	0	;
+
+			int	RIGHT_point	=	0	;
+
+			int	UP_point	=	0	;
+
+			int	DOWN_point	=	0	;
+
+			int	Max_L_or_R			;
+
+			int	Max_U_or_D			;
+
+			int	Max_point			;
+
+			Grid	test				;
+
+
+
+
+			test	=	now_stat	;
+
+			LEFT_point	=	get_Merge_point( test , LEFT )	;
+
+			test.shift( LEFT )	;
+
+			LEFT_point	=	LEFT_point + get_Is_Merge_point( test )		;
+
+
+
+
+			test	=	now_stat	;
+
+			RIGHT_point	=	get_Merge_point( test , LEFT )	;
+
+			test.shift( RIGHT )	;
+
+			RIGHT_point	=	RIGHT_point + get_Is_Merge_point( test )	;
+
+
+
+			
+			test	=	now_stat	;
+
+			UP_point	=	get_Merge_point( test , UP )	;
+
+			test.shift( UP )	;
+
+			UP_point	=	UP_point + get_Is_Merge_point( test )		;
+
+
+
+
+			test	=	now_stat	;
+
+			DOWN_point	=	get_Merge_point( test , DOWN )	;
+
+			test.shift( DOWN )	;
+
+			DOWN_point	=	DOWN_point + get_Is_Merge_point( test )	;
+
+
+
+			if( RIGHT_point > LEFT_point )
+				{
+
+					if( UP_point > RIGHT_point )
+						{
+
+							if( DOWN_point > UP_point )
+								{
+
+									return	DOWN	;
+
+								}
+
+							if( DOWN_point == UP_point )
+								{
+
+									if( ( int )( random() % 2 ) == 1 )
+										{
+
+											return	DOWN	;
+
+										}
+
+									return	UP	;
+
+								}
+
+							return	UP	;
+
+						}
+
+					if( UP_point == RIGHT_point )
+						{
+
+							if( DOWN_point > UP_point )
+								{
+
+									return	DOWN	;
+
+								}
+
+							if( DOWN_point == UP_point )
+								{
+
+									switch( ( int )( random() % 3 ) )
+										{
+
+											case 0 :
+												return	RIGHT	;
+											case 1 :
+												return	UP	;
+											default :
+												return	DOWN	;
+
+										}
+
+								}
+
+							//	DOWN_point < UP_point
+							
+
+							if( ( int )( random() % 2 ) == 0 )
+								{
+
+									return	UP	;
+
+								}
+
+							return	RIGHT	;
+
+						}
+
+					
+					//  UP_point  <  RIGHT_point
+
+
+					if( DOWN_point > RIGHT_point )
+						{
+					
+							return	DOWN	;
+
+						}
+
+					if( DOWN_point == RIGHT_point )
+						{
+
+							if( ( int )( random() % 2 ) == 0 )
+								{
+
+									return	DOWN	;
+
+								}
+
+							return	RIGHT	;
+
+						}
+
+					//	DOWN_point < RIGHT_point
+
+					return	RIGHT	;
+
+				}
+
+
+			if( RIGHT_point == LEFT_point )
+				{
+
+					if( UP_point > RIGHT_point )
+						{
+
+							if( DOWN_point > UP_point )
+								{
+
+									return	DOWN	;
+
+								}
+
+							if( DOWN_point == UP_point )
+								{
+								
+									if( ( int )( random() % 2 ) == 0 )
+										{
+
+											return	DOWN	;
+
+										}
+
+									return	UP	;
+
+								}
+
+							//	DOWN_point < UP_point
+
+							return	UP	;
+
+						}
+
+					if( UP_point == RIGHT_point )
+						{
+						
+							if( DOWN_point > UP_point )
+								{
+
+									return	DOWN	;
+
+								}
+
+							if( DOWN_point == UP_point )
+								{
+
+									switch( ( int )( random() % 4 ) )
+										{
+
+											case 0 :
+												return	DOWN	;
+											case 1 :
+												return	UP	;
+											case 2 :
+												return	RIGHT	;
+											default :
+												return	LEFT	;
+
+										}
+
+								}
+
+							//	DOWN_point < UP_point
+
+							switch( ( int )( random() % 3 ) )
+								{
+
+									case 0 :
+										return	UP	;
+									case 1 :
+										return	RIGHT	;
+									default :
+										return	LEFT	;
+
+								}
+
+						}
+
+					//	UP_point < RIGHT_point
+
+					if( DOWN_point > RIGHT_point )
+						{
+
+							return	DOWN	;
+
+						}
+
+					if( DOWN_point == RIGHT_point )
+						{
+
+							switch( ( int )( random() % 3 ) )
+								{
+
+									case 0 :
+										return	DOWN	;
+									case 1 :
+										return	RIGHT	;
+									default :
+										return	LEFT	;
+
+								}
+
+						}
+
+					//	DOWN_point < RIGHT_point
+
+					if( ( int )( random() % 2 ) == 0 )
+						{
+
+							return	RIGHT	;
+
+						}
+
+					return	LEFT	;
+
+				}
+				
+			//	RIGHT_point < LEFT_point
+
+				if( UP_point > LEFT_point )
+					{
+
+						if( DOWN_point > UP_point )
+							{
+
+								return	DOWN	;
+
+							}
+						
+						if( DOWN_point == UP_point )
+							{
+
+								if( ( int )( random() % 2 ) == 0 )
+									{
+
+										return	DOWN	;
+
+									}
+
+								return	UP	;
+
+							}
+
+						//	DOWN_point < UP_point
+
+						return	UP	;
+					}	
+		
+				if( UP_point == LEFT_point )
+					{
+
+						if( DOWN_point > UP_point )
+							{
+
+								return	DOWN	;
+
+							}
+
+						if( DOWN_point == UP_point )
+							{
+
+								switch( ( int )( random() % 3 ) )
+									{
+
+										case 0 :
+											return	DOWN	;
+										case 1 :
+											return	UP	;
+										default :
+											return	LEFT	;
+
+									}
+
+							}
+
+						//	DOWN_point < UP_point
+
+						if( ( int )( random() % 2 ) == 0 )
+							{
+
+								return	UP	;
+
+							}
+
+						return	LEFT	;
+
+					}
+
+				//	UP_point < LEFT_point
+
+				if( DOWN_point > LEFT_point )
+					{
+
+						return	DOWN	;
+
+					}
+
+				if( DOWN_point == LEFT_point )
+					{
+
+						if( ( int )( random() % 2 ) == 0 )
+							{
+
+								return	DOWN	;
+
+							}
+
+						return	LEFT	;
+
+					}
+
+				//	DOWN_point < LEFT_point
+
+				return	LEFT	;
+
 		}
