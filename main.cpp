@@ -6,7 +6,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#define Max_times 2
+#define Max_times 100
 
 
 using	namespace	std	;
@@ -37,6 +37,9 @@ int	get_Max_number_in_Grid( Grid& )	;
 
 
 int	get_Max_number( int* , int )	;
+
+bool	Does_move_dir( Grid , dir_e )	;
+
 
 /* test whether the row would be moved with left or right */
 bool row_full(Grid info,int row);
@@ -154,7 +157,7 @@ int	main()
 			*/
 
 
-			All_play_number	=	i + 1			;
+			All_play_number	=	i  			;
 			
 			Avg_point	=	result.All_point / All_play_number	;
 
@@ -461,49 +464,83 @@ dir_e	get_next_dir( Grid now_stat )
 
 			Grid	test				;
 
+	
 
+			test	=	now_stat	;
+
+			if( Does_move_dir( test , LEFT ) )
+				{
+
+					LEFT_point	=	get_Merge_point( test , LEFT )	;
+
+					test.shift( LEFT )	;
+
+					LEFT_point	=	LEFT_point + get_Is_Merge_point( test )		;
+
+				}
+			
 
 
 			test	=	now_stat	;
 
-			LEFT_point	=	get_Merge_point( test , LEFT )	;
-
-			test.shift( LEFT )	;
-
-			LEFT_point	=	LEFT_point + get_Is_Merge_point( test )		;
 
 
+			if( Does_move_dir( test , RIGHT ) )
+				{
 
+					RIGHT_point	=	get_Merge_point( test , RIGHT )	;
 
-			test	=	now_stat	;
+					test.shift( RIGHT )	;
 
-			RIGHT_point	=	get_Merge_point( test , RIGHT )	;
+					RIGHT_point	=	RIGHT_point + get_Is_Merge_point( test )	;
 
-			test.shift( RIGHT )	;
-
-			RIGHT_point	=	RIGHT_point + get_Is_Merge_point( test )	;
+				}
 
 
 
 			
 			test	=	now_stat	;
 
-			UP_point	=	get_Merge_point( test , UP )	;
+			if( Does_move_dir( test , UP ) )
+				{
 
-			test.shift( UP )	;
+					UP_point	=	get_Merge_point( test , UP )	;
 
-			UP_point	=	UP_point + get_Is_Merge_point( test )		;
+					test.shift( UP )	;
+
+					UP_point	=	UP_point + get_Is_Merge_point( test )		;
+
+				}
 
 
 
 
 			test	=	now_stat	;
 
-			DOWN_point	=	get_Merge_point( test , DOWN )	;
+			if( Does_move_dir( test , DOWN ) )
+				{
 
-			test.shift( DOWN )	;
+					DOWN_point	=	get_Merge_point( test , DOWN )	;
 
-			DOWN_point	=	DOWN_point + get_Is_Merge_point( test )	;
+					test.shift( DOWN )	;
+
+					DOWN_point	=	DOWN_point + get_Is_Merge_point( test )	;
+
+				}
+
+
+
+
+
+
+			/*
+
+
+				determine   directy
+
+
+			*/
+
 
 
 
@@ -847,3 +884,30 @@ bool row_full(Grid info,int row){
 
     return full;
 }
+
+
+
+bool	Does_move_dir( Grid now_stat , dir_e dir )
+		{
+
+			Grid	dir_now_stat	=	now_stat	;
+
+			int	i		=	0		;
+
+			dir_now_stat.shift( dir )	;
+
+			for( ; i < 16 ; i++ )
+				{
+
+					if( now_stat[ i ] != dir_now_stat[ i ] )
+						{
+
+							return	true	;
+
+						}
+
+				}
+
+			return	false	;
+
+		}
