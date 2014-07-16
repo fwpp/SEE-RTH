@@ -115,7 +115,7 @@ int	main()
 
 						//cout << "ok  " << i  <<  " "  <<  score  << "\n"  << endl	;
 
-						need_info.print( 30  )	;
+						need_info.print( 30 , 20 )	;
 
 						}
 
@@ -442,7 +442,6 @@ inline	bool	Does_block_exist( const int n1 , const int n2 )
 		
 		}
 
-<<<<<<< HEAD
 dir_e	get_next_dir( Grid now_stat )
 		{
 
@@ -478,7 +477,7 @@ dir_e	get_next_dir( Grid now_stat )
 
 			test	=	now_stat	;
 
-			RIGHT_point	=	get_Merge_point( test , LEFT )	;
+			RIGHT_point	=	get_Merge_point( test , RIGHT )	;
 
 			test.shift( RIGHT )	;
 
@@ -534,6 +533,8 @@ dir_e	get_next_dir( Grid now_stat )
 									return	UP	;
 
 								}
+
+							//	DOWN_point < UP_point
 
 							return	UP	;
 
@@ -828,7 +829,6 @@ dir_e	get_next_dir( Grid now_stat )
 				return	LEFT	;
 
 		}
-=======
 bool row_full(Grid info,int row){
     bool full=true;
     for(int i=0;i<GRID_LENGTH;i++){
@@ -847,4 +847,3 @@ bool row_full(Grid info,int row){
 
     return full;
 }
->>>>>>> b987f36a21dc45211656ed1e11d22ba41ff2c59b
