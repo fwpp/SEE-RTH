@@ -40,6 +40,8 @@ int	get_Max_number( int* , int )	;
 
 /* test whether the row would be moved with left or right */
 bool row_full(Grid info,int row);
+/* test whether the column or row can move with the direction */
+bool can_move(Grid info,int index, const dir_e dir );
 
 int	main()
 		{
@@ -843,6 +845,60 @@ bool row_full(Grid info,int row){
                 break;
             }
         }
+    }
+
+    return full;
+}
+
+bool can_move(Grid info,int index, const dir_e dir ){
+    bool full=true;
+    int i;
+
+    switch(dir){
+        case LEFT:
+            for(i=1;i<GRID_LENGTH;i++){
+                if( info(index,i)!=0 && info(index,i-1) == 0 )
+                    break;
+                if( info(index,i)>=3 && info(index,i) == info(index,i-1) )
+                    break;
+                if( info(index,i) + info(index,i-1) == 3 )
+                    break;
+            }
+            if(i>=GRID_LENGTH) full=false;
+            break;
+        case UP:
+            for(i=1;i<GRID_LENGTH;i++){
+                if( info(i,index)!=0 && info(i-1,index) == 0 )
+                    break;
+                if( info(i,index)>=3 && info(i,index) == info(i-1,index) )
+                    break;
+                if( info(i,index) + info(i-1,index) == 3 )
+                    break;
+            }
+            if(i>=GRID_LENGTH) full=false;
+            break;
+        case RIGHT:
+            for(i=GRID_LENGTH-2;i>=0;i--){
+                if( info(index,i)!=0 && info(index,i+1) == 0 )
+                    break;
+                if( info(index,i)>=3 && info(index,i) == info(index,i+1) )
+                    break;
+                if( info(index,i) + info(index,i+1) == 3 )
+                    break;
+            }
+            if(i<0) full=false;
+            break;
+        case DOWN:
+            for(i=GRID_LENGTH-2;i>=0;i--){
+                if( info(i,index)!=0 && info(i+1,index) == 0 )
+                    break;
+                if( info(i,index)>=3 && info(i,index) == info(i+1,index) )
+                    break;
+                if( info(i,index) + info(i+1,index) == 3 )
+                    break;
+            }
+            if(i<0) full=false;
+            break;
     }
 
     return full;
