@@ -40,6 +40,10 @@ int	get_Max_number( int* , int )	;
 
 /* test whether the row would be moved with left or right */
 bool row_full(Grid info,int row);
+/* test whether the column would be moved with up or down */
+bool column_full(Grid info,int column);
+
+
 
 int	main()
 		{
@@ -839,6 +843,26 @@ bool row_full(Grid info,int row){
 
         if( i < (GRID_LENGTH-1) ){
             if( info.canMerge(info(row,i),info(row,i+1)) ){
+                full=false;
+                break;
+            }
+        }
+    }
+
+    return full;
+}
+
+bool column_full(Grid info,int column){
+    bool full=true;
+
+    for(int i=0;i<GRID_LENGTH;i++){
+        if( info(i,column) == 0 ){
+            full=false;
+            break;
+        }
+
+        if( i < (GRID_LENGTH-1) ){
+            if( info.canMerge(info(i,column),info(i+1,column)) ){
                 full=false;
                 break;
             }
