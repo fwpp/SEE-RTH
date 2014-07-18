@@ -43,6 +43,26 @@ bool	Does_move_dir( Grid , dir_e )	;
 
 /* test whether the row would be moved with left or right */
 bool row_full(Grid info,int row);
+/* test whether the column or row can move with the direction */
+bool can_move(Grid info,int index, const dir_e dir );
+/* return some possible direction information */
+struct direction_1_2{
+    int left;
+    int up;
+    int right;
+    int down;
+    int one;
+    int two;
+};
+/* coordination of number */
+struct node{
+    int x,y;
+};
+/* check 1, 2 pairs */
+struct direction_1_2 red_blue(Grid info, int next_hint);
+/* return 1 : pair, 0 : not pair */
+int pairBFS(char maps[GRID_LENGTH][GRID_LENGTH], int x, int y);
+
 
 int	main()
 		{
@@ -911,3 +931,236 @@ bool	Does_move_dir( Grid now_stat , dir_e dir )
 			return	false	;
 
 		}
+
+
+bool can_move(Grid info,int index, const dir_e dir ){
+    bool full=true;
+    int i;
+
+    switch(dir){
+        case LEFT:
+            for(i=1;i<GRID_LENGTH;i++){
+                if( info(index,i)!=0 && info(index,i-1) == 0 )
+                    break;
+                if( info.canMerge( info(index,i) , info(index,i-1) ) )
+                    break;
+            }
+            if(i>=GRID_LENGTH) full=false;
+            break;
+        case UP:
+            for(i=1;i<GRID_LENGTH;i++){
+                if( info(i,index)!=0 && info(i-1,index) == 0 )
+                    break;
+                if( info.canMerge( info(i,index) , info(i-1,index) ) )
+                    break;
+            }
+            if(i>=GRID_LENGTH) full=false;
+            break;
+        case RIGHT:
+            for(i=GRID_LENGTH-2;i>=0;i--){
+                if( info(index,i)!=0 && info(index,i+1) == 0 )
+                    break;
+                if( info.canMerge( info(index,i) , info(index,i+1) ) )
+                    break;
+            }
+            if(i<0) full=false;
+            break;
+        case DOWN:
+            for(i=GRID_LENGTH-2;i>=0;i--){
+                if( info(i,index)!=0 && info(i+1,index) == 0 )
+                    break;
+                if( info.canMerge( info(i,index) , info(i+1,index) ) )
+                    break;
+            }
+            if(i<0) full=false;
+            break;
+    }
+
+    return full;
+}
+
+struct direction_1_2 red_blue(Grid info,int next_hint){
+    struct node not_pair[GRID_LENGTH*GRID_LENGTH],extract;
+    int top;
+    char maps[GRID_LENGTH][GRID_LENGTH]={0};
+    struct direction_1_2 information;
+    int outcome;
+
+    information.down=0;
+    information.left=0;
+    information.up=0;
+    information.right=0;
+    information.one=0;
+    information.two=0;
+
+    /* create maps */
+    for(int i=0;i<GRID_LENGTH;i++){
+        for(int j=0;j<GRID_LENGTH;j++){
+            maps[i][j]=info(i,j);
+        }
+    }
+
+    top=-1;
+    for(int i=0;i<GRID_LENGTH;i++){
+        for(int j=0;j<GRID_LENGTH;j++){
+            if(maps[i][j]==1 || maps[i][j]==2){
+                outcome=pairBFS(maps,i,j);
+                if(outcome==0){
+                    not_pair[++top].x=i; not_pair[top].y=j;
+                }
+            }
+        }
+    }
+
+    /*
+     *     |
+     *  A  |   B
+     *-----|------
+     *     |
+     *  C  |   D
+     */
+    /* possible direction
+       A : down , right
+       B : down , left
+       C : up , right
+       D : up , left
+     */
+    /* number at edge => weight ++ */
+    if(top>=0){
+        for(int i=0;i<=top;i++){
+            extract=not_pair[i];
+
+            if(info(extract.x,extract.y)+next_hint!=3)
+                continue;
+
+            if(info(extract.x,extract.y)==1)
+                ++information.one;
+            if(info(extract.x,extract.y)==2)
+                ++information.two;
+
+            /* A */
+            if(extract.x<=1 && extract.y <= 1){
+                outcome=can_move(info, extract.x, RIGHT);
+                if(extract.x!=1||extract.y!=1){
+                    information.right+=2*outcome;
+                }else if(info(0,0)==0){
+                    information.right+=outcome;
+                }
+
+                outcome=can_move(info, extract.y, DOWN);
+                if(extract.x!=1||extract.y!=1){
+                    information.down+=2*outcome;
+                }else if(info(0,0)==0){
+                    information.down+=outcome;
+                }
+            }
+
+            /* B */
+            if(extract.x<=1 && extract.y >1){
+                outcome=can_move(info, extract.x, LEFT);
+                if(extract.x!=1||extract.y!=2){
+                    information.left+=2*outcome;
+                }else if(info(0,3)==0){
+                    information.left+=outcome;
+                }
+
+                outcome=can_move(info, extract.y, DOWN);
+                if(extract.x!=1||extract.y!=2){
+                    information.down+=2*outcome;
+                }else if(info(0,3)==0){
+                    information.down+=outcome;
+                }
+            }
+
+            /* C */
+            if(extract.x>1 && extract.y <=1){
+                outcome=can_move(info, extract.x, RIGHT);
+                if(extract.x!=2||extract.y!=1){
+                    information.right+=2*outcome;
+                }else if(info(3,0)==0){
+                    information.right+=outcome;
+                }
+
+                outcome=can_move(info, extract.y, UP);
+                if(extract.x!=2||extract.y!=1){
+                    information.up+=2*outcome;
+                }else if(info(3,0)==0){
+                    information.up+=outcome;
+                }
+            }
+
+            /* D */
+            if(extract.x>1 && extract.y >1){
+                outcome=can_move(info, extract.x, LEFT);
+                if(extract.x!=2||extract.y!=2){
+                    information.left+=2*outcome;
+                }else if(info(3,3)==0){
+                    information.left+=outcome;
+                }
+
+                outcome=can_move(info, extract.y, UP);
+                if(extract.x!=2||extract.y!=2){
+                    information.up+=2*outcome;
+                }else if(info(3,3)==0){
+                    information.up+=outcome;
+                }
+            }
+        }
+    }
+
+    return information;
+}
+
+
+int pairBFS(char maps[GRID_LENGTH][GRID_LENGTH], int x, int y){
+    struct node queueList[GRID_LENGTH*GRID_LENGTH],cur;
+    int head,tail;
+    int original;
+
+    /* number find pair */
+    original=maps[x][y];
+    maps[x][y]=3;
+
+    tail=head=0;
+    queueList[tail].x=x; queueList[tail].y=y;
+    while(head<=tail){
+
+        cur=queueList[head++];
+
+        if(maps[cur.x][cur.y]+original==3){
+            maps[cur.x][cur.y]=3;
+            return 1;
+        }
+
+        if(maps[cur.x][cur.y]<=0)
+            maps[cur.x][cur.y]=( (-1) * ( (10*x) + y ) );
+        else if(cur.x!=x && cur.y!=y)
+            continue;
+
+        if(cur.y+1<GRID_LENGTH)
+            if(maps[cur.x][cur.y+1] < 3 && maps[cur.x][cur.y+1]!=( (-1) * ( (10*x) + y ) )){
+                queueList[++tail].x=cur.x; queueList[tail].y=cur.y+1;
+            }
+
+
+        if(cur.x+1<GRID_LENGTH){
+            if(maps[cur.x+1][cur.y] < 3 && maps[cur.x+1][cur.y]!=( (-1) * ( (10*x) + y ) )){
+                queueList[++tail].x=cur.x+1; queueList[tail].y=cur.y;
+            }
+        }
+
+        if(cur.y-1>=0){
+            if(maps[cur.x][cur.y-1] < 3 && maps[cur.x][cur.y-1]!=( (-1) * ( (10*x) + y ) )){
+                queueList[++tail].x=cur.x; queueList[tail].y=cur.y-1;
+            }
+        }
+
+        if(cur.x-1>=0){
+            if(maps[cur.x-1][cur.y] < 3 && maps[cur.x-1][cur.y]!=( (-1) * ( (10*x) + y ) )){
+                queueList[++tail].x=cur.x-1; queueList[tail].y=cur.y;
+            }
+        }
+    }
+
+    return 0;
+}
