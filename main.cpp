@@ -7,6 +7,12 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #define Max_times 100
+#define exist true
+#define non_exist false
+
+
+
+
 
 
 using	namespace	std	;
@@ -30,7 +36,7 @@ inline	bool	Does_block_exist( const int , const int )	;
 int	get_Merge_point( Grid , const dir_e )	;
 
 
-int	get_Is_Merge_point( Grid )	;
+int	get_all_dir_Merge_point( Grid )	;
 
 
 int	get_Max_number_in_Grid( Grid& )	;
@@ -66,6 +72,49 @@ int pairBFS(char maps[GRID_LENGTH][GRID_LENGTH], int x, int y);
 
 int	main()
 		{
+
+			#ifdef Test_get_Merge_point
+
+
+			Game	t_game	;
+
+			Grid	t_grid	;
+
+			/*t_game.getCurrentGrid( t_grid )	;
+
+
+			t_grid.print( 0 , 30 )	;
+
+			cout << "\nLEFT : " << get_Merge_point( t_grid , LEFT ) << "\nRIGHT : " << get_Merge_point( t_grid , RIGHT ) 
+
+			     << "\nUP : " << get_Merge_point( t_grid , UP ) << "\nDOWN : " << get_Merge_point( t_grid , DOWN ) << "\n" << endl	;
+			
+			*/
+
+			t_game.insertDirection( LEFT ) ;
+
+			t_game.insertDirection( RIGHT )	;
+			
+			t_game.insertDirection( DOWN )	;
+
+			t_game.getCurrentGrid( t_grid )	;
+
+			t_grid.print( 50 , 0 )	;
+
+			 cout << "\nLEFT : " << get_Merge_point( t_grid , LEFT ) << "\nRIGHT : " << get_Merge_point( t_grid , RIGHT )
+
+                             << "\nUP : " << get_Merge_point( t_grid , UP ) << "\nDOWN : " << get_Merge_point( t_grid , DOWN ) << "\n" << endl  ;
+
+
+
+
+			#endif
+
+
+
+			#ifdef Play
+		
+
 			/*
 
 			record init.
@@ -73,6 +122,9 @@ int	main()
 
 			*/
 			
+			
+			
+
 			
 			FILE*	file	;
 
@@ -198,6 +250,9 @@ int	main()
 			result_file << "Max number is " << result.Max_number << " ." << endl	;
 
 
+			#endif
+			
+
 			return	0	;
 
 		}
@@ -270,6 +325,8 @@ int	get_Merge_point( Grid now_stat , const dir_e dir )
 
 			int	col	;
 
+			bool	Merge_exist	=	non_exist	;
+
 
 			int	Merge_point	=	0	;
 
@@ -279,21 +336,31 @@ int	get_Merge_point( Grid now_stat , const dir_e dir )
 
 					case LEFT :
 
-						for( col = 0 ; col < 3 ; col++ )
+						for( row = 0 ; row < 4 ; row++ )
 							{
 
-							for( row = 0 ; row < 4 ; row++ )
-								{
+								for( col = 0 ; ( col < 3 ) && ( Merge_exist == non_exist ) ; col++ )
+									{
 
-									if( now_stat.canMerge( now_stat( row , col ) , now_stat( row  , col + 1 ) ) )
-										{
+										if( now_stat.canMerge( now_stat( row , col ) , now_stat( row , col + 1 ) ) )
+											{
 
-											Merge_point	=	Merge_point + 1	;
-										
-										}
-								
-								}	
-							
+												Merge_point	=	Merge_point + 1	;
+
+												Merge_exist	=	exist		;
+
+											}
+
+										if( now_stat( row , col ) == 0  )
+											{
+
+												Merge_exist	=	exist	;
+
+											}
+
+									}
+					
+								Merge_exist	=	non_exist	;
 
 							}
 		
@@ -301,10 +368,10 @@ int	get_Merge_point( Grid now_stat , const dir_e dir )
 
 					case RIGHT :
 
-						for( col = 3 ; col > 0 ; col-- )
+						for( row - 0 ; row < 4 ; row++ )
 							{
 
-								for( row = 0 ; row < 4 ; row++ )
+								for( col = 3 ; ( col > 0 ) && ( Merge_exist == non_exist ) ; col-- )
 									{
 
 										if( now_stat.canMerge( now_stat( row , col ) , now_stat( row , col - 1 ) ) )
@@ -312,9 +379,20 @@ int	get_Merge_point( Grid now_stat , const dir_e dir )
 
 												Merge_point	=	Merge_point + 1	;
 
+												Merge_exist	=	exist		;
+
+											}
+
+										if( now_stat( row , col ) == 0 )
+											{
+
+												Merge_exist	=	exist	;
+
 											}
 
 									}
+
+								Merge_exist	=	non_exist	;
 
 							}
 
@@ -322,20 +400,31 @@ int	get_Merge_point( Grid now_stat , const dir_e dir )
 
 					case UP :
 
-						for( row = 0 ; row < 3 ; row++ )
+						for( col = 0 ; col < 4 ; col++ )
 							{
 
-								for( col = 0 ; col < 4 ; col++ )
+								for( row = 0 ; ( row < 3 ) && ( Merge_exist == non_exist ) ; row++ )
 									{
 
 										if( now_stat.canMerge( now_stat( row , col ) , now_stat( row + 1 , col ) ) )
 											{
 
-												Merge_point	=	Merge_point + 1 ;
+												Merge_point	=	Merge_point + 1	;
+
+												Merge_exist	=	exist		;
+
+											}
+
+										if( now_stat( row , col ) == 0 )
+											{
+
+												Merge_exist	=	exist	;
 
 											}
 
 									}
+
+								Merge_exist	=	non_exist	;
 
 							}
 						
@@ -343,10 +432,10 @@ int	get_Merge_point( Grid now_stat , const dir_e dir )
 
 					case DOWN :
 
-						for( row = 3 ; row > 0 ; row-- )
+						for( col = 0 ; col < 4 ; col++ )
 							{
 
-								for( col = 0 ; col < 4 ; col++ )
+								for( row = 3 ; ( row > 0 ) && ( Merge_exist == non_exist ) ; row-- )
 									{
 
 										if( now_stat.canMerge( now_stat( row , col ) , now_stat( row - 1 , col ) ) )
@@ -354,12 +443,24 @@ int	get_Merge_point( Grid now_stat , const dir_e dir )
 
 												Merge_point	=	Merge_point + 1	;
 
+												Merge_exist	=	exist		;
+
+											}
+										
+										if( now_stat( row , col ) == 0 )
+											{
+
+												Merge_exist	=	exist	;
+
 											}
 
 									}
 
+								Merge_exist	=	non_exist	;
+
 							}
 
+					
 						return	Merge_point	;
 
 					default :
@@ -373,7 +474,7 @@ int	get_Merge_point( Grid now_stat , const dir_e dir )
 
 
 
-int	get_Is_Merge_point( Grid now_stat )
+int	get_all_dir_Merge_point( Grid now_stat )
 		{
 		
 			int	Is_Merge_point	=	0	;
@@ -486,67 +587,6 @@ dir_e	get_next_dir( Grid now_stat )
 
 	
 
-			test	=	now_stat	;
-
-			if( Does_move_dir( test , LEFT ) )
-				{
-
-					LEFT_point	=	get_Merge_point( test , LEFT )	;
-
-					test.shift( LEFT )	;
-
-					LEFT_point	=	LEFT_point + get_Is_Merge_point( test )		;
-
-				}
-			
-
-
-			test	=	now_stat	;
-
-
-
-			if( Does_move_dir( test , RIGHT ) )
-				{
-
-					RIGHT_point	=	get_Merge_point( test , RIGHT )	;
-
-					test.shift( RIGHT )	;
-
-					RIGHT_point	=	RIGHT_point + get_Is_Merge_point( test )	;
-
-				}
-
-
-
-			
-			test	=	now_stat	;
-
-			if( Does_move_dir( test , UP ) )
-				{
-
-					UP_point	=	get_Merge_point( test , UP )	;
-
-					test.shift( UP )	;
-
-					UP_point	=	UP_point + get_Is_Merge_point( test )		;
-
-				}
-
-
-
-
-			test	=	now_stat	;
-
-			if( Does_move_dir( test , DOWN ) )
-				{
-
-					DOWN_point	=	get_Merge_point( test , DOWN )	;
-
-					test.shift( DOWN )	;
-
-					DOWN_point	=	DOWN_point + get_Is_Merge_point( test )	;
-
-				}
 
 
 
