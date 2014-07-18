@@ -11,7 +11,7 @@
 #define non_exist false
 
 
-
+//#define Test_get_Merge_point
 
 
 
@@ -106,6 +106,8 @@ int	main()
                              << "\nUP : " << get_Merge_point( t_grid , UP ) << "\nDOWN : " << get_Merge_point( t_grid , DOWN ) << "\n" << endl  ;
 
 
+
+			cout << "All dir : " << get_all_dir_Merge_point( t_grid ) << "\n" << endl	;
 
 
 			#endif
@@ -477,78 +479,7 @@ int	get_Merge_point( Grid now_stat , const dir_e dir )
 int	get_all_dir_Merge_point( Grid now_stat )
 		{
 		
-			int	Is_Merge_point	=	0	;
-
-			int	row	;
-
-			int	col	;
-
-			
-
-
-			for( row = 0 ; row < 4 ; row++ )
-				{
-
-					for( col = 0 ; col < 4 ; col++ )
-						{
-
-							if( Does_block_exist( row + 1 , col ) )
-								{
-								
-									if( now_stat.canMerge( now_stat( row , col ) , now_stat( row + 1 , col ) ) )
-										{
-
-											Is_Merge_point	=	Is_Merge_point + 1	;
-
-										}
-
-								}
-
-
-							if( Does_block_exist( row - 1 , col ) )
-								{
-
-									if( now_stat.canMerge( now_stat( row , col ) , now_stat( row - 1 , col ) ) )
-										{
-
-											Is_Merge_point	=	Is_Merge_point + 1	;
-
-										}
-
-								}
-
-							
-							if( Does_block_exist( row , col + 1 ) )
-								{
-
-									if( now_stat.canMerge( now_stat( row , col ) , now_stat( row , col + 1 ) ) )
-										{
-
-											Is_Merge_point	=	Is_Merge_point + 1	;
-
-										}
-
-								}
-
-							
-							if( Does_block_exist( row , col - 1 ) )
-								{
-
-									if( now_stat.canMerge( now_stat( row , col ) , now_stat( row , col - 1 ) ) )
-										{
-
-											Is_Merge_point	=	Is_Merge_point + 1	;
-
-										}
-
-								}
-
-						}
-
-				}
-
-
-			return	Is_Merge_point	;
+			return	get_Merge_point( now_stat , LEFT ) + get_Merge_point( now_stat , RIGHT ) + get_Merge_point( now_stat , UP ) + get_Merge_point( now_stat , DOWN )	;
 
 		}
 
