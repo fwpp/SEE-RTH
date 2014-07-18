@@ -6,7 +6,14 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#define Max_times 2
+#define Max_times 100
+
+
+#define Play
+#define First_method
+
+
+
 
 
 using	namespace	std	;
@@ -27,6 +34,8 @@ dir_e	get_next_dir( Grid )	;
 
 inline	bool	Does_block_exist( const int , const int )	;
 
+bool	Does_move_dir( Grid , dir_e )	;
+
 int	get_Merge_point( Grid , const dir_e )	;
 
 
@@ -38,11 +47,13 @@ int	get_Max_number_in_Grid( Grid& )	;
 
 int	get_Max_number( int* , int )	;
 
-/* test whether the row would be moved with left or right */
-bool row_full(Grid info,int row);
 
 int	main()
 		{
+
+
+			#ifdef	Play
+
 			/*
 
 			record init.
@@ -71,6 +82,14 @@ int	main()
 
 			result.Max_number	=	0	;
 
+			#ifdef	Time_test
+
+			long	long	int	All_insert_dir_times	=	0	;
+
+			double	start , end	;
+
+			#endif
+
 			
 			Game	game	;
 
@@ -89,7 +108,11 @@ int	main()
 			*/
 
 
+			#ifdef	Time_test
 
+			start	=	cpuTime()	;
+
+			#endif
 
 
 			for( ; i < Max_times ; i++ )
@@ -109,13 +132,23 @@ int	main()
 						*/
 
 						
+						#ifdef First_method
+
 						game.getCurrentGrid( need_info )	;
 
 						game.insertDirection( get_next_dir( need_info ) )	;
 
 						//cout << "ok  " << i  <<  " "  <<  score  << "\n"  << endl	;
 
-						need_info.print( 30 , 20 )	;
+						//need_info.print( 30 , 20 )	;
+
+						#endif
+
+						#ifdef	Time_test
+
+						All_insert_dir_times	=	All_insert_dir_times	+	1	;
+
+						#endif
 
 						}
 
@@ -134,6 +167,14 @@ int	main()
 
 
 				}
+
+			#ifdef	Time_test
+
+			end	=	cpuTime()	;
+
+			cout << ( ( ( double ) All_insert_dir_times )  / ( end - start ) ) << "/s\n" << endl	;
+
+			#endif
 		
 			result.Max_number	=	get_Max_number( Max_number , 100 )	;
 
@@ -154,7 +195,7 @@ int	main()
 			*/
 
 
-			All_play_number	=	i + 1			;
+			All_play_number	=	i  			;
 			
 			Avg_point	=	result.All_point / All_play_number	;
 
@@ -173,6 +214,9 @@ int	main()
 			result_file << "Average point is " << Avg_point << " ." << endl		;
 
 			result_file << "Max number is " << result.Max_number << " ." << endl	;
+
+
+			#endif
 
 
 			return	0	;
@@ -464,46 +508,80 @@ dir_e	get_next_dir( Grid now_stat )
 
 
 
-			test	=	now_stat	;
-
-			LEFT_point	=	get_Merge_point( test , LEFT )	;
-
-			test.shift( LEFT )	;
-
-			LEFT_point	=	LEFT_point + get_Is_Merge_point( test )		;
-
-
-
-
-			test	=	now_stat	;
-
-			RIGHT_point	=	get_Merge_point( test , RIGHT )	;
-
-			test.shift( RIGHT )	;
-
-			RIGHT_point	=	RIGHT_point + get_Is_Merge_point( test )	;
-
-
-
 			
-			test	=	now_stat	;
 
-			UP_point	=	get_Merge_point( test , UP )	;
+				test	=	now_stat	;
 
-			test.shift( UP )	;
+if( Does_move_dir( test , LEFT ) )
+{
 
-			UP_point	=	UP_point + get_Is_Merge_point( test )		;
+LEFT_point	=	get_Merge_point( test , LEFT )	;
+
+test.shift( LEFT )	;
+
+LEFT_point	=	LEFT_point + get_Is_Merge_point( test )	;
+
+}
+
+
+
+test	=	now_stat	;
+
+
+
+if( Does_move_dir( test , RIGHT ) )
+{
+
+RIGHT_point	=	get_Merge_point( test , RIGHT )	;
+
+test.shift( RIGHT )	;
+
+RIGHT_point	=	RIGHT_point + get_Is_Merge_point( test )	;
+
+}
 
 
 
 
-			test	=	now_stat	;
+test	=	now_stat	;
 
-			DOWN_point	=	get_Merge_point( test , DOWN )	;
+if( Does_move_dir( test , UP ) )
+{
 
-			test.shift( DOWN )	;
+UP_point	=	get_Merge_point( test , UP )	;
 
-			DOWN_point	=	DOWN_point + get_Is_Merge_point( test )	;
+test.shift( UP )	;
+
+UP_point	=	UP_point + get_Is_Merge_point( test )	;
+
+}
+
+
+
+
+test	=	now_stat	;
+
+if( Does_move_dir( test , DOWN ) )
+{
+
+DOWN_point	=	get_Merge_point( test , DOWN )	;
+
+test.shift( DOWN )	;
+
+DOWN_point	=	DOWN_point + get_Is_Merge_point( test )	;
+
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -829,21 +907,32 @@ dir_e	get_next_dir( Grid now_stat )
 				return	LEFT	;
 
 		}
-bool row_full(Grid info,int row){
-    bool full=true;
-    for(int i=0;i<GRID_LENGTH;i++){
-        if( info(row,i) == 0){
-            full=false;
-            break;
-        }
 
-        if( i < (GRID_LENGTH-1) ){
-            if( info.canMerge(info(row,i),info(row,i+1)) ){
-                full=false;
-                break;
-            }
-        }
-    }
 
-    return full;
-}
+bool	Does_move_dir( Grid now_stat , dir_e dir )
+		{		
+
+			Grid	dir_now_stat	=	now_stat	;
+
+			int	i	=	0	;
+
+
+
+
+			dir_now_stat.shift( dir )	;
+
+			for( ; i < 16 ; i++ )
+				{
+
+					if( now_stat[ i ] != dir_now_stat[ i ] )
+						{
+
+							return	true	;
+
+						}
+
+				}
+
+			return	false	;
+
+		}
