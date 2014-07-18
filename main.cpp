@@ -11,7 +11,7 @@
 
 #define Play
 #define First_method
-
+#define Time_test
 
 
 
@@ -46,6 +46,7 @@ int	get_Max_number_in_Grid( Grid& )	;
 
 
 int	get_Max_number( int* , int )	;
+
 
 
 int	main()
@@ -910,29 +911,26 @@ DOWN_point	=	DOWN_point + get_Is_Merge_point( test )	;
 
 
 bool	Does_move_dir( Grid now_stat , dir_e dir )
-		{		
+{
 
-			Grid	dir_now_stat	=	now_stat	;
+Grid	dir_now_stat	=	now_stat	;
 
-			int	i	=	0	;
+int	i	=	0	;
 
+dir_now_stat.shift( dir )	;
 
+for( ; i < 16 ; i++ )
+{
 
+if( now_stat[ i ] != dir_now_stat[ i ] )
+{
 
-			dir_now_stat.shift( dir )	;
+return	true	;
 
-			for( ; i < 16 ; i++ )
-				{
+}
 
-					if( now_stat[ i ] != dir_now_stat[ i ] )
-						{
+}
 
-							return	true	;
+return	false	;
 
-						}
-
-				}
-
-			return	false	;
-
-		}
+}
