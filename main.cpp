@@ -63,12 +63,14 @@ struct direction_1_2{
 /* coordination of number */
 struct node{
     int x,y;
+    int point;
 };
 /* check 1, 2 pairs */
 struct direction_1_2 red_blue(Grid info, int next_hint);
 /* return 1 : pair, 0 : not pair */
 int pairBFS(char maps[GRID_LENGTH][GRID_LENGTH], int x, int y);
-
+/* check whether numbers could merge originally after another direction */
+bool another_direction_no_affect(Grid info, const dir_e originalDir, const dir_e anotherDir);
 
 int	main()
 		{
@@ -1134,4 +1136,195 @@ int pairBFS(char maps[GRID_LENGTH][GRID_LENGTH], int x, int y){
     }
 
     return 0;
+}
+
+
+bool another_direction_no_affect(Grid info, const dir_e originalDir, const dir_e anotherDir){
+    struct node mergeList[32];
+    struct node mergeList2[64];
+    int top,top2;
+
+    /* get numbers could merge originally */
+    top=-1;
+    switch(originalDir){
+        case LEFT:
+            for(int i=0;i<GRID_LENGTH;i++){
+                for(int j=0;j<GRID_LENGTH-1;j++){
+                    if( info.canMerge( info(i,j) , info(i,j+1) ) ){
+                        mergeList[++top].x=i; mergeList[top].y=j; mergeList[top].point=info(i,j);
+                        mergeList[++top].x=i; mergeList[top].y=j+1; mergeList[top].point=info(i,j+1);
+                        j++;
+                    }
+                }
+            }
+            break;
+
+        case UP:
+            for(int j=0;j<GRID_LENGTH;j++){
+                for(int i=0;i<GRID_LENGTH-1;i++){
+                    if( info.canMerge( info(i,j) , info(i+1,j) ) ){
+                        mergeList[++top].x=i; mergeList[top].y=j; mergeList[top].point=info(i,j);
+                        mergeList[++top].x=i+1; mergeList[top].y=j; mergeList[top].point=info(i+1,j);
+                        i++;
+                    }
+                }
+            }
+
+            break;
+
+        case RIGHT:
+            for(int i=0;i<GRID_LENGTH;i++){
+                for(int j=GRID_LENGTH-1;j>0;j--){
+                    if( info.canMerge( info(i,j) , info(i,j-1) ) ){
+                        mergeList[++top].x=i; mergeList[top].y=j; mergeList[top].point=info(i,j);
+                        mergeList[++top].x=i; mergeList[top].y=j-1; mergeList[top].point=info(i,j-1);
+                        j--;
+                    }
+                }
+            }
+            break;
+
+        case DOWN:
+            for(int j=0;j<GRID_LENGTH;j++){
+                for(int i=GRID_LENGTH-1;i>0;i--){
+                    if( info.canMerge( info(i,j) , info(i-1,j) ) ){
+                        mergeList[++top].x=i; mergeList[top].y=j; mergeList[top].point=info(i,j);
+                        mergeList[++top].x=i-1; mergeList[top].y=j; mergeList[top].point=info(i-1,j);
+                        i--;
+                    }
+                }
+            }
+            break;
+    }
+
+
+    /* check whether numbers could merge originally after another direction */
+    top2=-1;
+    switch(anotherDir){
+        case LEFT:
+            for(int i=0;i<GRID_LENGTH;i++){
+                for(int j=0;j<GRID_LENGTH-1;j++){
+                    if(info(i,j)==0)break;
+                    if( info.canMerge( info(i,j) , info(i,j+1) ) ){
+                        mergeList2[++top2].x=i; mergeList2[top2].y=j; mergeList2[top2].point=info(i,j);
+                        mergeList2[++top2].x=i; mergeList2[top2].y=j+1; mergeList2[top2].point=info(i,j+1);
+                        j++;
+                        break;
+                    }
+                }
+            }
+
+            break;
+
+        case UP:
+            for(int j=0;j<GRID_LENGTH;j++){
+                for(int i=0;i<GRID_LENGTH-1;i++){
+                    if(info(i,j)==0)break;
+                    if( info.canMerge( info(i,j) , info(i+1,j) ) ){
+                        mergeList2[++top2].x=i; mergeList2[top2].y=j; mergeList2[top2].point=info(i,j);
+                        mergeList2[++top2].x=i+1; mergeList2[top2].y=j; mergeList2[top2].point=info(i+1,j);
+                        i++;
+                        break;
+                    }
+                }
+            }
+
+            break;
+
+        case RIGHT:
+            for(int i=0;i<GRID_LENGTH;i++){
+                for(int j=GRID_LENGTH-1;j>0;j--){
+                    if(info(i,j)==0)break;
+                    if( info.canMerge( info(i,j) , info(i,j-1) ) ){
+                        mergeList2[++top2].x=i; mergeList2[top2].y=j; mergeList2[top2].point=info(i,j);
+                        mergeList2[++top2].x=i; mergeList2[top2].y=j-1; mergeList2[top2].point=info(i,j-1);
+                        j--;
+                        break;
+                    }
+                }
+            }
+            break;
+
+        case DOWN:
+            for(int j=0;j<GRID_LENGTH;j++){
+                for(int i=GRID_LENGTH-1;i>0;i--){
+                    if(info(i,j)==0)break;
+                    if( info.canMerge( info(i,j) , info(i-1,j) ) ){
+                        mergeList2[++top2].x=i; mergeList2[top2].y=j; mergeList2[top2].point=info(i,j);
+                        mergeList2[++top2].x=i-1; mergeList2[top2].y=j; mergeList2[top2].point=info(i-1,j);
+                        i--;
+                        break;
+                    }
+                }
+            }
+            break;
+    }
+
+    info.shift(anotherDir);
+    switch(originalDir){
+        case LEFT:
+            for(int i=0;i<GRID_LENGTH;i++){
+                for(int j=0;j<GRID_LENGTH-1;j++){
+                    if( info.canMerge( info(i,j) , info(i,j+1) ) ){
+                        mergeList2[++top2].x=i; mergeList2[top2].y=j; mergeList2[top2].point=info(i,j);
+                        mergeList2[++top2].x=i; mergeList2[top2].y=j+1; mergeList2[top2].point=info(i,j+1);
+                        j++;
+                    }
+                }
+            }
+            break;
+
+        case UP:
+            for(int j=0;j<GRID_LENGTH;j++){
+                for(int i=0;i<GRID_LENGTH-1;i++){
+                    if( info.canMerge( info(i,j) , info(i+1,j) ) ){
+                        mergeList2[++top2].x=i; mergeList2[top2].y=j; mergeList2[top2].point=info(i,j);
+                        mergeList2[++top2].x=i+1; mergeList2[top2].y=j; mergeList2[top2].point=info(i+1,j);
+                        i++;
+                    }
+                }
+            }
+
+            break;
+
+        case RIGHT:
+            for(int i=0;i<GRID_LENGTH;i++){
+                for(int j=GRID_LENGTH-1;j>0;j--){
+                    if( info.canMerge( info(i,j) , info(i,j-1) ) ){
+                        mergeList2[++top2].x=i; mergeList2[top2].y=j; mergeList2[top2].point=info(i,j);
+                        mergeList2[++top2].x=i; mergeList2[top2].y=j-1; mergeList2[top2].point=info(i,j-1);
+                        j--;
+                    }
+                }
+            }
+            break;
+
+        case DOWN:
+            for(int j=0;j<GRID_LENGTH;j++){
+                for(int i=GRID_LENGTH-1;i>0;i--){
+                    if( info.canMerge( info(i,j) , info(i-1,j) ) ){
+                        mergeList2[++top2].x=i; mergeList2[top2].y=j; mergeList2[top2].point=info(i,j);
+                        mergeList2[++top2].x=i-1; mergeList2[top2].y=j; mergeList2[top2].point=info(i-1,j);
+                        i--;
+                    }
+                }
+            }
+            break;
+    }
+
+    for(int i=0;i<=top2;i++){
+        for(int j=0;j<=top;j++){
+            if(mergeList2[i].point==mergeList[j].point){
+                mergeList[j].point=0;
+            }
+        }
+    }
+
+    for(int i=0;i<=top;i++){
+        if(mergeList[i].point!=0){
+            return false;
+        }
+    }
+
+    return true;
 }
