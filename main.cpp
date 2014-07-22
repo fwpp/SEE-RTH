@@ -66,7 +66,7 @@ struct node{
     int point;
 };
 /* check 1, 2 pairs */
-struct direction_1_2 red_blue(Grid info, int next_hint);
+struct direction_1_2 red_blue(Grid info, int next_hint, struct direction_1_2 information);
 /* return 1 : pair, 0 : not pair */
 int pairBFS(char maps[GRID_LENGTH][GRID_LENGTH], int x, int y);
 /* check whether numbers could merge originally after another direction */
@@ -958,19 +958,12 @@ bool can_move(Grid info,int index, const dir_e dir ){
     return full;
 }
 
-struct direction_1_2 red_blue(Grid info,int next_hint){
+struct direction_1_2 red_blue(Grid info,int next_hint, struct direction_1_2 information){
     struct node not_pair[GRID_LENGTH*GRID_LENGTH],extract;
     int top;
     char maps[GRID_LENGTH][GRID_LENGTH]={0};
-    struct direction_1_2 information;
     int outcome;
 
-    information.down=0;
-    information.left=0;
-    information.up=0;
-    information.right=0;
-    information.one=0;
-    information.two=0;
 
     /* create maps */
     for(int i=0;i<GRID_LENGTH;i++){
