@@ -205,6 +205,8 @@ int	main()
 						}
 
 				
+					/*
+
 					result.All_point	=	result.All_point + score	;
 
 					if( score > result.Max_point )
@@ -216,15 +218,19 @@ int	main()
 					
 
 					Max_number[ i ]	=	get_Max_number_in_Grid( need_info )	;	
-
+					
+					*/
 
 				}
+
+			/*
+
 		
 			result.Max_number	=	get_Max_number( Max_number , 100 )	;
 
 
 
-			
+			*/
 
 
 
@@ -237,6 +243,9 @@ int	main()
 
 
 			*/
+
+
+			/*
 
 
 			All_play_number	=	i  			;
@@ -259,6 +268,8 @@ int	main()
 
 			result_file << "Max number is " << result.Max_number << " ." << endl	;
 
+
+			*/
 
 			#endif
 			
