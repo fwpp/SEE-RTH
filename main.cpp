@@ -39,7 +39,7 @@ bool	Does_move_dir( Grid , dir_e )	;
 int	get_Merge_point( Grid , const dir_e )	;
 
 
-int	get_Is_Merge_point( Grid )	;
+int	get_all_dir_Merge_point( Grid )	;
 
 
 int	get_Max_number_in_Grid( Grid& )	;
@@ -283,195 +283,169 @@ int	get_Max_number( int* number_array , int Max )
 		}
 
 
-
 int	get_Merge_point( Grid now_stat , const dir_e dir )
-		{
+{
 
 
-			int	row	;
+int	row	;
 
-			int	col	;
+int	col	;
 
+bool	Merge_exist	=	non_exist	;
 
-			int	Merge_point	=	0	;
 
+int	Merge_point	=	0	;
 
-			switch( dir )
-				{
 
-					case LEFT :
+switch( dir )
+{
 
-						for( col = 0 ; col < 3 ; col++ )
-							{
+case LEFT :
 
-							for( row = 0 ; row < 4 ; row++ )
-								{
+for( row = 0 ; row < 4 ; row++ )
+{
 
-									if( now_stat.canMerge( now_stat( row , col ) , now_stat( row  , col + 1 ) ) )
-										{
+for( col = 0 ; ( col < 3 ) && ( Merge_exist == non_exist ) ; col++ )
+{
 
-											Merge_point	=	Merge_point + 1	;
-										
-										}
-								
-								}	
-							
+if( now_stat.canMerge( now_stat( row , col ) , now_stat( row , col + 1 ) ) )
+{
 
-							}
-		
-						return	Merge_point	;
+Merge_point	=	Merge_point + 1	;
 
-					case RIGHT :
+Merge_exist	=	exist	;
 
-						for( col = 3 ; col > 0 ; col-- )
-							{
+}
 
-								for( row = 0 ; row < 4 ; row++ )
-									{
+if( now_stat( row , col ) == 0 )
+{
 
-										if( now_stat.canMerge( now_stat( row , col ) , now_stat( row , col - 1 ) ) )
-											{
+Merge_exist	=	exist	;
 
-												Merge_point	=	Merge_point + 1	;
+}
 
-											}
+}
 
-									}
+Merge_exist	=	non_exist	;
 
-							}
+}
 
-						return	Merge_point	;
+return	Merge_point	;
 
-					case UP :
+case RIGHT :
 
-						for( row = 0 ; row < 3 ; row++ )
-							{
+for( row = 0 ; row < 4 ; row++ )
+{
 
-								for( col = 0 ; col < 4 ; col++ )
-									{
+for( col = 3 ; ( col > 0 ) && ( Merge_exist == non_exist ) ; col-- )
+{
 
-										if( now_stat.canMerge( now_stat( row , col ) , now_stat( row + 1 , col ) ) )
-											{
+if( now_stat.canMerge( now_stat( row , col ) , now_stat( row , col - 1 ) ) )
+{
 
-												Merge_point	=	Merge_point + 1 ;
+Merge_point	=	Merge_point + 1	;
 
-											}
+Merge_exist	=	exist	;
 
-									}
+}
 
-							}
-						
-						return	Merge_point	;
+if( now_stat( row , col ) == 0 )
+{
 
-					case DOWN :
+Merge_exist	=	exist	;
 
-						for( row = 3 ; row > 0 ; row-- )
-							{
+}
 
-								for( col = 0 ; col < 4 ; col++ )
-									{
+}
 
-										if( now_stat.canMerge( now_stat( row , col ) , now_stat( row - 1 , col ) ) )
-											{
+Merge_exist	=	non_exist	;
 
-												Merge_point	=	Merge_point + 1	;
+}
 
-											}
+return	Merge_point	;
 
-									}
+case UP :
 
-							}
+for( col = 0 ; col < 4 ; col++ )
+{
 
-						return	Merge_point	;
+for( row = 0 ; ( row < 3 ) && ( Merge_exist == non_exist ) ; row++ )
+{
 
-					default :
-			
-						return	0	;
+if( now_stat.canMerge( now_stat( row , col ) , now_stat( row + 1 , col ) ) )
+{
 
-				}	
+Merge_point	=	Merge_point + 1	;
 
-		}
+Merge_exist	=	exist	;
 
+}
 
+if( now_stat( row , col ) == 0 )
+{
 
+Merge_exist	=	exist	;
 
-int	get_Is_Merge_point( Grid now_stat )
-		{
-		
-			int	Is_Merge_point	=	0	;
+}
 
-			int	row	;
+}
 
-			int	col	;
+Merge_exist	=	non_exist	;
 
-			
+}
 
+return	Merge_point	;
 
-			for( row = 0 ; row < 4 ; row++ )
-				{
+case DOWN :
 
-					for( col = 0 ; col < 4 ; col++ )
-						{
+for( col = 0 ; col < 4 ; col++ )
+{
 
-							if( Does_block_exist( row + 1 , col ) )
-								{
-								
-									if( now_stat.canMerge( now_stat( row , col ) , now_stat( row + 1 , col ) ) )
-										{
+for( row = 3 ; ( row > 0 ) && ( Merge_exist == non_exist ) ; row-- )
+{
 
-											Is_Merge_point	=	Is_Merge_point + 1	;
+if( now_stat.canMerge( now_stat( row , col ) , now_stat( row - 1 , col ) ) )
+{
 
-										}
+Merge_point	=	Merge_point + 1	;
 
-								}
+Merge_exist	=	exist	;
 
+}
 
-							if( Does_block_exist( row - 1 , col ) )
-								{
+if( now_stat( row , col ) == 0 )
+{
 
-									if( now_stat.canMerge( now_stat( row , col ) , now_stat( row - 1 , col ) ) )
-										{
+Merge_exist	=	exist	;
 
-											Is_Merge_point	=	Is_Merge_point + 1	;
+}
 
-										}
+}
 
-								}
+Merge_exist	=	non_exist	;
 
-							
-							if( Does_block_exist( row , col + 1 ) )
-								{
+}
 
-									if( now_stat.canMerge( now_stat( row , col ) , now_stat( row , col + 1 ) ) )
-										{
 
-											Is_Merge_point	=	Is_Merge_point + 1	;
+return	Merge_point	;
 
-										}
+default :
 
-								}
+return	0	;
 
-							
-							if( Does_block_exist( row , col - 1 ) )
-								{
+}	
 
-									if( now_stat.canMerge( now_stat( row , col ) , now_stat( row , col - 1 ) ) )
-										{
+}
 
-											Is_Merge_point	=	Is_Merge_point + 1	;
 
-										}
 
-								}
 
-						}
+int	get_all_dir_Merge_point( Grid now_stat )
+{
 
-				}
+return	get_Merge_point( now_stat , LEFT ) + get_Merge_point( now_stat , RIGHT ) + get_Merge_point( now_stat , UP ) + get_Merge_point( now_stat , DOWN )	;
 
-
-			return	Is_Merge_point	;
-
-		}
+}
 
 inline	bool	Does_block_exist( const int n1 , const int n2 )
 		{
@@ -520,7 +494,7 @@ LEFT_point	=	get_Merge_point( test , LEFT )	;
 
 test.shift( LEFT )	;
 
-LEFT_point	=	LEFT_point + get_Is_Merge_point( test )	;
+LEFT_point	=	LEFT_point + get_all_dir_Merge_point( test )	;
 
 }
 
@@ -537,7 +511,7 @@ RIGHT_point	=	get_Merge_point( test , RIGHT )	;
 
 test.shift( RIGHT )	;
 
-RIGHT_point	=	RIGHT_point + get_Is_Merge_point( test )	;
+RIGHT_point	=	RIGHT_point + get_all_dir_Merge_point( test )	;
 
 }
 
@@ -553,7 +527,7 @@ UP_point	=	get_Merge_point( test , UP )	;
 
 test.shift( UP )	;
 
-UP_point	=	UP_point + get_Is_Merge_point( test )	;
+UP_point	=	UP_point + get_all_dir_Merge_point( test )	;
 
 }
 
@@ -569,7 +543,7 @@ DOWN_point	=	get_Merge_point( test , DOWN )	;
 
 test.shift( DOWN )	;
 
-DOWN_point	=	DOWN_point + get_Is_Merge_point( test )	;
+DOWN_point	=	DOWN_point + get_all_dir_Merge_point( test )	;
 
 }
 
