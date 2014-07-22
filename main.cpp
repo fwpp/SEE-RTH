@@ -71,6 +71,8 @@ struct direction_1_2 red_blue(Grid info, int next_hint);
 int pairBFS(char maps[GRID_LENGTH][GRID_LENGTH], int x, int y);
 /* check whether numbers could merge originally after another direction */
 bool another_direction_no_affect(Grid info, const dir_e originalDir, const dir_e anotherDir);
+/* count number of rows or columns would move on certain direction */
+int row_column_move_amount(Grid info, const dir_e direction);
 
 int	main()
 		{
@@ -1327,4 +1329,40 @@ bool another_direction_no_affect(Grid info, const dir_e originalDir, const dir_e
     }
 
     return true;
+}
+
+int row_column_move_amount(Grid info, const dir_e direction){
+    int counter=0;
+
+    switch(direction){
+        case LEFT:
+            if(can_move(info,0,LEFT)) {++counter;}
+            if(can_move(info,1,LEFT)) {++counter;}
+            if(can_move(info,2,LEFT)) {++counter;}
+            if(can_move(info,3,LEFT)) {++counter;}
+            break;
+
+        case UP:
+            if(can_move(info,0,UP)) {++counter;}
+            if(can_move(info,1,UP)) {++counter;}
+            if(can_move(info,2,UP)) {++counter;}
+            if(can_move(info,3,UP)) {++counter;}
+            break;
+
+        case RIGHT:
+            if(can_move(info,0,RIGHT)) {++counter;}
+            if(can_move(info,1,RIGHT)) {++counter;}
+            if(can_move(info,2,RIGHT)) {++counter;}
+            if(can_move(info,3,RIGHT)) {++counter;}
+            break;
+
+        case DOWN:
+            if(can_move(info,0,DOWN)) {++counter;}
+            if(can_move(info,1,DOWN)) {++counter;}
+            if(can_move(info,2,DOWN)) {++counter;}
+            if(can_move(info,3,DOWN)) {++counter;}
+            break;
+    }
+
+    return counter;
 }
