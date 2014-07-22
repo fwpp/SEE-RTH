@@ -1,4 +1,3 @@
-
 #ifndef GAME_H_
 #define GAME_H_
 #define NDEBUG       // turn off assert() for debugging
@@ -87,7 +86,6 @@ class Grid{
 
 class Game{
     private:
-        static int   m_objCount;
         static bool  m_objInit;
 
         static Grid  m_grid;
