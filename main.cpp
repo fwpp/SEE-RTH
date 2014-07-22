@@ -12,7 +12,8 @@
 
 
 //#define Test_get_Merge_point
-
+/* test1 */
+/* #define TEST_1 */
 
 
 using	namespace	std	;
@@ -77,6 +78,8 @@ int row_column_move_amount(Grid info, const dir_e direction);
 struct direction_1_2 depth_estimation(struct direction_1_2 dir_info, Grid info);
 /* get how many Max_number in grid */
 int get_Max_number_in_Grid_Amount(Grid& info, int Max_number);
+/* determine direction */
+dir_e determine_direction(Grid info, struct direction_1_2 dir_info);
 
 int	main()
 		{
@@ -273,12 +276,108 @@ int	main()
 
 			#endif
 			
+			
+			#ifdef TEST_1
+		            myGame.getCurrentGrid(info);
+		            struct direction_1_2 dir_info;
+		            dir_e outcome;
+		            dir_info.left=dir_info.up=dir_info.right=dir_info.down=0;
+		            dir_info.one=dir_info.two=0;
+		
+		            if( (myGame.getHint()-'0') == 1 || (myGame.getHint()-'0') == 2){
+		                dir_info=red_blue(info,(myGame.getHint()-'0'), dir_info);
+		            }
+		
+		            dir_info=depth_estimation(dir_info, info);
+		
+		            outcome=determine_direction(info, dir_info);
+		
+		            myGame.insertDirection(outcome);
+		            isGameOver = myGame.isGameOver(score);
+		        #endif // TEST_1
+			
 
 			return	0	;
 
 		}
+/*
+void PlayNRounds(int n){
+#ifdef _WIN32
+    system("cls");
+#elif defined(__linux__)
+    system("clear");
+#endif
+    int score;
+    Game myGame;
+    bool isGameOver;
+    dir_e dir;
+
+    gotoXY(5,0);
+    std::cout<<"Previous";
+    gotoXY(35,0);
+    std::cout<<"Current (Hint: "<<myGame.getHint()<<")";
+    myGame.printGrid(35,2);
+
+    if(myGame.isGameOver(score))  myGame.reset();
+
+    Grid myGrid;
+
+    Grid info;
+
+    for(int i = 0;i < n;i++){
+        isGameOver = false;
+        while(!isGameOver){
+            #ifdef TEST_1
+                myGame.getCurrentGrid(info);
+                struct direction_1_2 dir_info;
+                dir_e outcome;
+                dir_info.left=dir_info.up=dir_info.right=dir_info.down=0;
+                dir_info.one=dir_info.two=0;
+
+                if( (myGame.getHint()-'0') == 1 || (myGame.getHint()-'0') == 2){
+                    dir_info=red_blue(info,(myGame.getHint()-'0'), dir_info);
+                }
+
+                dir_info=depth_estimation(dir_info, info);
+
+                outcome=determine_direction(info, dir_info);
+
+                myGame.insertDirection(outcome);
+                isGameOver = myGame.isGameOver(score);
+            #endif // TEST_1
 
 
+            #ifdef example_main
+                while((dir = getDirFromKeyboard()) == INVALID);
+
+                gotoXY(5,10);
+                std::cout<<dirToStr(dir);
+                //std::cout<<dirToStr(outcome);
+                myGame.printGrid(5,2);
+
+                myGame.insertDirection(dir);
+                gotoXY(50,0);
+                std::cout<<myGame.getHint();
+                isGameOver = myGame.isGameOver(score);
+                myGame.printGrid(35,2);
+            #endif // example_main
+       }
+        myGame.printGrid(35,2);
+        if(i < n - 1)  myGame.reset();
+        gotoXY(0,15);
+        printf("  Round:    %d      \n", i+1);
+        printf("  Score:    %d      \n", score);
+
+    }
+}
+
+int main(int argc, char* argv[]){
+    // Note: API function calls performed by any 'Game' object effects the same set of static class members,
+    // so even through the 2 following function calls use different 'Game' objects, the same game continues
+    PlayNRounds(50);
+    PlayNRounds(50);
+    return 0;
+}*/
 
 
 int	get_Max_number_in_Grid( Grid&	info )
@@ -1451,4 +1550,140 @@ int get_Max_number_in_Grid_Amount(Grid& info, int Max_number){
     }
 
     return counter;
+}
+
+dir_e determine_direction(Grid info, struct direction_1_2 dir_info){
+    dir_e first, second,third,fourth;
+    dir_e tmp;
+    int first_weight=0,second_weight=0,third_weight=0,fourth_weigth=0;
+
+    if(row_column_move_amount(info,LEFT) == 0){
+        dir_info.left=0;
+    }
+    if(row_column_move_amount(info,UP) == 0){
+        dir_info.up=0;
+    }
+    if(row_column_move_amount(info,RIGHT) == 0){
+        dir_info.right=0;
+    }
+    if(row_column_move_amount(info,DOWN) == 0){
+        dir_info.down=0;
+    }
+
+    if(dir_info.left==0 && dir_info.up==0 && dir_info.right==0 && dir_info.down==0){
+        if(row_column_move_amount(info,LEFT) != 0){
+            return LEFT;
+        }
+        if(row_column_move_amount(info,UP) != 0){
+            return UP;
+        }
+        if(row_column_move_amount(info,RIGHT) != 0){
+            return RIGHT;
+        }
+        if(row_column_move_amount(info,DOWN) != 0){
+            return DOWN;
+        }
+    }
+
+    if(dir_info.left > first_weight){ first_weight=dir_info.left; first=LEFT; }
+    if(dir_info.up > first_weight){ first_weight=dir_info.up; first=UP; }
+    if(dir_info.right > first_weight){ first_weight=dir_info.right; first=RIGHT; }
+    if(dir_info.down > first_weight){ first_weight=dir_info.down; first=DOWN; }
+
+    if(dir_info.left > second_weight && first!=LEFT){ second_weight=dir_info.left; second=LEFT; }
+    if(dir_info.up > second_weight && first!=UP){ second_weight=dir_info.up; second=UP; }
+    if(dir_info.right > second_weight && first!=RIGHT){ second_weight=dir_info.right; second=RIGHT; }
+    if(dir_info.down > second_weight && first!=DOWN){ second_weight=dir_info.down; second=DOWN; }
+
+    if(dir_info.left > third_weight && first!=LEFT && second!=LEFT){ third_weight=dir_info.left; third=LEFT; }
+    if(dir_info.up > third_weight && first!=UP && second!=UP){ third_weight=dir_info.up; third=UP; }
+    if(dir_info.right > third_weight && first!=RIGHT && second!=RIGHT){ third_weight=dir_info.right; third=RIGHT; }
+    if(dir_info.down > third_weight && first!=DOWN && second!=DOWN){ third_weight=dir_info.down; third=DOWN; }
+
+    if(dir_info.left > fourth_weigth && first!=LEFT && second!=LEFT && third!=LEFT){ fourth_weigth=dir_info.left; fourth=LEFT; }
+    if(dir_info.up > fourth_weigth && first!=UP && second!=UP && third!=UP){ fourth_weigth=dir_info.up; fourth=UP; }
+    if(dir_info.right > fourth_weigth && first!=RIGHT && second!=RIGHT && third!=RIGHT){ fourth_weigth=dir_info.right; fourth=RIGHT; }
+    if(dir_info.down > fourth_weigth && first!=DOWN && second!=DOWN && third!=DOWN){ fourth_weigth=dir_info.down; fourth=DOWN; }
+
+    if( (first_weight == second_weight) && (first_weight == third_weight) && (first_weight == fourth_weigth) ){
+        switch(rand()%4){
+            case 0:
+                break;
+            case 1:
+                tmp=first; first=second; second=tmp;
+                break;
+            case 2:
+                tmp=first; first=third; third=tmp;
+                break;
+            case 3:
+                tmp=first; first=fourth; fourth=tmp;
+                break;
+        }
+
+        switch(rand()%3){
+            case 0:
+                break;
+            case 1:
+                tmp=second; second=third; third=tmp;
+                break;
+            case 2:
+                tmp=second; second=fourth; fourth=tmp;
+                break;
+        }
+
+        /*if(row_column_move_amount(info,second)!=0){
+            if(another_direction_no_affect(info,first,second)){
+                return second;
+            }
+        }*/
+        return first;
+    }else if( (first_weight == second_weight) && (first_weight==third_weight) ){
+        switch(rand()%3){
+            case 0:
+                break;
+            case 1:
+                tmp=first; first=second; second=tmp;
+                break;
+            case 2:
+                tmp=first; first=third; third=tmp;
+                break;
+        }
+
+        switch(rand()%2){
+            case 0:
+                break;
+            case 1:
+                tmp=second; second=third; third=tmp;
+                break;
+        }
+
+        /*if(row_column_move_amount(info,second)!=0){
+            if(another_direction_no_affect(info,first,second)){
+                return second;
+            }
+        }*/
+        return first;
+    }else if( (first_weight == second_weight) ){
+        switch(rand()%2){
+            case 0:
+                break;
+            case 1:
+                tmp=first; first=second; second=tmp;
+                break;
+        }
+
+        /*if(row_column_move_amount(info,second)!=0){
+            if(another_direction_no_affect(info,first,second)){
+                return second;
+            }
+        }*/
+        return first;
+    }else{
+        /*if(row_column_move_amount(info,second)!=0){
+            if(another_direction_no_affect(info,first,second)){
+                return second;
+            }
+        }*/
+        return first;
+    }
 }
