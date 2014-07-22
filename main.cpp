@@ -73,6 +73,10 @@ int pairBFS(char maps[GRID_LENGTH][GRID_LENGTH], int x, int y);
 bool another_direction_no_affect(Grid info, const dir_e originalDir, const dir_e anotherDir);
 /* count number of rows or columns would move on certain direction */
 int row_column_move_amount(Grid info, const dir_e direction);
+/* now and one depth estimation : the amount of merge */
+struct direction_1_2 depth_estimation(struct direction_1_2 dir_info, Grid info);
+/* get how many Max_number in grid */
+int get_Max_number_in_Grid_Amount(Grid& info, int Max_number);
 
 int	main()
 		{
@@ -1362,6 +1366,84 @@ int row_column_move_amount(Grid info, const dir_e direction){
             if(can_move(info,2,DOWN)) {++counter;}
             if(can_move(info,3,DOWN)) {++counter;}
             break;
+    }
+
+    return counter;
+}
+
+struct direction_1_2 depth_estimation(struct direction_1_2 dir_info, Grid info){
+    int maxPointNow, maxPointNowAmount;
+    int maxPointShift;
+    Grid tmp;
+
+    maxPointNow = get_Max_number_in_Grid(info);
+    maxPointNowAmount = get_Max_number_in_Grid_Amount(info,maxPointNow);
+
+    /* left & left_depth */
+    tmp=info;
+    dir_info.left += get_Merge_point(tmp,LEFT);
+    if(tmp.shift(LEFT)){
+        dir_info.left += get_all_dir_Merge_point(tmp);
+
+        if( (maxPointShift=get_Max_number_in_Grid(tmp)) > maxPointNow ){
+            dir_info.left += 1;
+        }else if( get_Max_number_in_Grid_Amount(tmp,maxPointShift) > maxPointNowAmount ){
+            dir_info.left += 1;
+        }
+    }
+
+
+
+    /* up & up_depth */
+    tmp=info;
+    dir_info.up += get_Merge_point(tmp,UP);
+    if(tmp.shift(UP)){
+        dir_info.up += get_all_dir_Merge_point(tmp);
+
+        if( (maxPointShift=get_Max_number_in_Grid(tmp)) > maxPointNow ){
+            dir_info.up += 1;
+        }else if( get_Max_number_in_Grid_Amount(tmp,maxPointShift) > maxPointNowAmount ){
+            dir_info.up += 1;
+        }
+    }
+
+    /* right & right_depth */
+    tmp=info;
+    dir_info.right += get_Merge_point(tmp,RIGHT);
+    if(tmp.shift(RIGHT)){
+        dir_info.right += get_all_dir_Merge_point(tmp);
+
+        if( (maxPointShift=get_Max_number_in_Grid(tmp)) > maxPointNow ){
+            dir_info.right += 1;
+        }else if( get_Max_number_in_Grid_Amount(tmp,maxPointShift) > maxPointNowAmount ){
+            dir_info.right += 1;
+        }
+    }
+
+    /* down & down_depth */
+    tmp=info;
+    dir_info.down += get_Merge_point(tmp,DOWN);
+    if(tmp.shift(DOWN)){
+        dir_info.down += get_all_dir_Merge_point(tmp);
+
+        if( (maxPointShift=get_Max_number_in_Grid(tmp)) > maxPointNow ){
+            dir_info.down += 1;
+        }else if( get_Max_number_in_Grid_Amount(tmp,maxPointShift) > maxPointNowAmount ){
+            dir_info.down += 1;
+        }
+    }
+
+
+    return dir_info;
+}
+
+int get_Max_number_in_Grid_Amount(Grid& info, int Max_number){
+    int counter=0;
+
+    for(int i=0;i<16;i++){
+        if(info[i]==Max_number){
+            ++counter;
+        }
     }
 
     return counter;
