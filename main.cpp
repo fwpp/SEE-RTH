@@ -372,7 +372,7 @@ int	get_Merge_point( Grid now_stat , const dir_e dir )
 
 					case RIGHT :
 
-						for( row - 0 ; row < 4 ; row++ )
+						for( row = 0 ; row < 4 ; row++ )
 							{
 
 								for( col = 3 ; ( col > 0 ) && ( Merge_exist == non_exist ) ; col-- )
