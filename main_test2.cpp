@@ -460,7 +460,7 @@ dir_e   get_next_dir( Grid now_stat )
                                                         if( DOWN_point > UP_point )
                                                                 {
 
-                                                                        returnDOWN    ;
+                                                                        return  DOWN    ;
 
                                                                 }
 
@@ -490,7 +490,7 @@ dir_e   get_next_dir( Grid now_stat )
                                                         if( DOWN_point > UP_point )
                                                                 {
 
-                                                                        returnDOWN    ;
+                                                                        return  DOWN    ;
 
                                                                 }
 
