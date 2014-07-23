@@ -474,7 +474,7 @@ dir_e   get_next_dir( Grid now_stat )
 
                                                                              }
 
-                                                                        returnUP      ;
+                                                                        return UP      ;
 
                                                                 }
 
@@ -517,7 +517,7 @@ dir_e   get_next_dir( Grid now_stat )
                                                         if( ( int )( random() % 2 ) == 0 )
                                                                 {
 
-                                                                        returnUP      ;
+                                                                        return UP      ;
 
                                                                 }
 
@@ -542,7 +542,7 @@ dir_e   get_next_dir( Grid now_stat )
                                                         if( ( int )( random() % 2 ) == 0 )
                                                                 {
 
-                                                                        returnDOWN    ;
+                                                                        return DOWN    ;
 
                                                                 }
 
@@ -566,7 +566,7 @@ dir_e   get_next_dir( Grid now_stat )
                                                         if( DOWN_point > UP_point )
                                                                 {
 
-                                                                        returnDOWN    ;
+                                                                        return DOWN    ;
 
                                                                 }
 
@@ -580,7 +580,7 @@ dir_e   get_next_dir( Grid now_stat )
 
                                                                              }
 
-                                                                        returnUP      ;
+                                                                        return UP      ;
 
                                                                 }
 
@@ -596,7 +596,7 @@ dir_e   get_next_dir( Grid now_stat )
                                                         if( DOWN_point > UP_point )
                                                                 {
 
-                                                                        returnDOWN    ;
+                                                                        return DOWN    ;
 
                                                                 }
 
@@ -773,6 +773,7 @@ dir_e   get_next_dir( Grid now_stat )
                                 return  LEFT    ;
 
                 }
+
 bool row_full(Grid info,int row){
     bool full=true;
     for(int i=0;i<GRID_LENGTH;i++){
