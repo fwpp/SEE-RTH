@@ -30,9 +30,6 @@ int getch(void){
 #endif*/
 
 //#define Test_get_Merge_point
-/* test1 */
-#define TEST_1
-
 
 using   namespace       std     ;
 
@@ -100,72 +97,36 @@ int get_Max_number_in_Grid_Amount(Grid& info, int Max_number);
 dir_e determine_direction(Grid info, struct direction_1_2 dir_info);
 
 void PlayNRounds(int n){
-#ifdef _WIN32
-    system("cls");
-#elif defined(__linux__)
-    system("clear");
-#endif
     int score;
     Game myGame;
     bool isGameOver;
-    dir_e dir;
-
-    gotoXY(5,0);
-    std::cout<<"Previous";
-    gotoXY(35,0);
-    std::cout<<"Current (Hint: "<<myGame.getHint()<<")";
-    myGame.printGrid(35,2);
-
+    
     if(myGame.isGameOver(score))  myGame.reset();
-
-    Grid myGrid;
 
     Grid info;
 
     for(int i = 0;i < n;i++){
         isGameOver = false;
         while(!isGameOver){
-            #ifdef TEST_1
-                myGame.getCurrentGrid(info);
-                struct direction_1_2 dir_info;
-                dir_e outcome;
-                dir_info.left=dir_info.up=dir_info.right=dir_info.down=0;
-                dir_info.one=dir_info.two=0;
+            myGame.getCurrentGrid(info);
+            struct direction_1_2 dir_info;
+            dir_e outcome;
+            dir_info.left=dir_info.up=dir_info.right=dir_info.down=0;
+            dir_info.one=dir_info.two=0;
 
-                if( (myGame.getHint()-'0') == 1 || (myGame.getHint()-'0') == 2){
-                    dir_info=red_blue(info,(myGame.getHint()-'0'), dir_info);
-                }
+            if( (myGame.getHint()-'0') == 1 || (myGame.getHint()-'0') == 2){
+                dir_info=red_blue(info,(myGame.getHint()-'0'), dir_info);
+            }
 
-                dir_info=depth_estimation(dir_info, info);
+            dir_info=depth_estimation(dir_info, info);
 
-                outcome=determine_direction(info, dir_info);
+            outcome=determine_direction(info, dir_info);
 
-                myGame.insertDirection(outcome);
-                isGameOver = myGame.isGameOver(score);
-            #endif // TEST_1
-
-
-            #ifdef example_main
-                while((dir = getDirFromKeyboard()) == INVALID);
-
-                gotoXY(5,10);
-                std::cout<<dirToStr(dir);
-                //std::cout<<dirToStr(outcome);
-                myGame.printGrid(5,2);
-
-                myGame.insertDirection(dir);
-                gotoXY(50,0);
-                std::cout<<myGame.getHint();
-                isGameOver = myGame.isGameOver(score);
-                myGame.printGrid(35,2);
-            #endif // example_main
+            myGame.insertDirection(outcome);
+            isGameOver = myGame.isGameOver(score);
        }
-        myGame.printGrid(35,2);
+        
         if(i < n - 1)  myGame.reset();
-        gotoXY(0,15);
-        printf("  Round:    %d      \n", i+1);
-        printf("  Score:    %d      \n", score);
-
     }
 }
 
