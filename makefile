@@ -15,10 +15,10 @@ x:
 	g++ -c -g -Wall -O2 main.cpp
 	
 test2: y
-        g++ -o Test2 main_test2.o Threes_test.o
+	g++ -o Test2 main_test2.o Threes_test.o
 y:
-        g++ -o main_test2.o -c main_test2.cpp
-        g++ -o Threes_test.o -c Threes_test.cpp
+	g++ -o main_test2.o -c main_test2.cpp
+	g++ -o Threes_test.o -c Threes_test.cpp
 
 clear:
 	rm Test1 main.o
